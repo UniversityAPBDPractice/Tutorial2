@@ -1,61 +1,58 @@
-﻿namespace Tutorial2;
+﻿using Tutorial2.Enums;
+
+namespace Tutorial2.Containers;
 
 public abstract class Container
 {
-    public enum Type
-    {
-        L,
-        G,
-        C
-    }
-
     private static int _counter = 0;
-    public required float Mass { get; }
-    public required float Height { get; }
-    public required float TareWeight { get; }
-    public required float CargoWeight { get; protected set; }
-    public required float Depth { get; }
-    public required float MaxPayload { get; }
-    public required Type ContainerType;
-    public required int Id;
+    public float Height { get; }
+    public float TareWeight { get; }
+    public float CargoWeight { get; protected set; }
+    public float Depth { get; }
+    public float MaxPayload { get; }
+    public ContainerType Type;
+    public int Id;
 
     protected Container(
         float height,
         float depth,
         float tareWeight,
         float maxPayload,
-        Type containerType
+        ContainerType containerType
     ){
         Height = height > 0 ? height : throw new ArgumentException("Height must be more than 0");
         Depth = depth > 0 ? depth : throw new ArgumentException("Depth must be more than 0");
         TareWeight = tareWeight > 0 ? tareWeight : throw new ArgumentException("tareWeight must be more than 0");
         MaxPayload = maxPayload > 0 ? maxPayload : throw new ArgumentException("MaxPayload must be more than 0");
-    }
-
-    public static int IncrementCounter()
-    {
-        return counter++;
+        CargoWeight = 0;
+        Id = _counter++;
+        Type = containerType;
     }
 
     public String GetSerialNumber()
     {
-        return $"KON-{ContainerType}-{Id}";
+        return $"KON-{Type}-{Id}";
     }
 
-    public void Empty()
+    public virtual void Empty()
     {
         CargoWeight = 0;
     }
 
-    public void Load(float mass)
+    public virtual void Load(float mass)
     {
         if (mass <= 0) throw new ArgumentException("Mass cant be 0 or less");
         if (!CanLoadCargo(mass))
         {
-            throw new OverfillException("The Mass you specified exceeds Payload Capacity", this);
+            throw new OverfillException("The Mass you specified exceeds Payload Capacity");
         }
         CargoWeight += mass;
     }
 
     protected virtual bool CanLoadCargo(float mass) => mass + CargoWeight <= MaxPayload;
+
+    public override string ToString()
+    {
+        return $"{GetSerialNumber()}, {CargoWeight}/{MaxPayload}kg";
+    }
 }

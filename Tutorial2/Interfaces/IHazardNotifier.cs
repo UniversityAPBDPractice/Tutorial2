@@ -1,5 +1,4 @@
-using Tutorial2;
-
+namespace Tutorial2.Interfaces;
 public interface IHazardNotifier{
-    void Notify(Container c);
+    void Notify(string message);
 }
