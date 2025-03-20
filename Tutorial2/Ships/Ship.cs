@@ -1,12 +1,11 @@
 ﻿using Tutorial2.Containers;
-
-namespace Tutorial2.Ship;
+namespace Tutorial2.Ships;
 
 public class Ship
 {
     public static int _counter { get; set; }
     private int Id { get; set; }
-    public required List<Container> Containers { get; set; }
+    private List<Container> Containers { get; set; }
     private float CargoWeight { get; set; }
     private float MaxSpeed { get; set; }
     private float MaxContainers { get; set; }
@@ -31,6 +30,7 @@ public class Ship
         {
             if (Containers[i] == c)
             {
+                c.FromShip();
                 Containers.RemoveAt(i);
                 UpdateCargoWeight();
                 return;
@@ -46,7 +46,9 @@ public class Ship
         {
             if (Containers[i].GetSerialNumber().Equals(serialNumber))
             {
+                Containers[i].FromShip();
                 Containers[i] = newC;
+                newC.OnShip();
                 UpdateCargoWeight();
                 return;
             }
@@ -76,7 +78,9 @@ public class Ship
         {
             throw new ArgumentException("The Container is too big.");
         }
+
         Containers.Add(c);
+        c.OnShip();
         UpdateCargoWeight();
     }
 
@@ -97,6 +101,8 @@ public class Ship
 
     public override string ToString()
     {
-        return $"Ship {Id}(speed={MaxSpeed}; containers={Containers}; {CargoWeight}/{MaxCargoWeight}kg)";
+        string containerString = "";
+        Containers.ForEach(container => containerString += container.ToString()+'\n');
+        return $"\nShip {Id}(speed={MaxSpeed}; containers=\n{containerString}; {CargoWeight}/{MaxCargoWeight}kg)\n";
     }
 }

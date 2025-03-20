@@ -1,5 +1,5 @@
 ﻿using Tutorial2.Enums;
-
+using Tutorial2.Exceptions;
 namespace Tutorial2.Containers;
 
 public abstract class Container
@@ -12,8 +12,9 @@ public abstract class Container
     public float MaxPayload { get; }
     public ContainerType Type;
     public int Id;
+    protected bool IsOnShip = false;
 
-    protected Container(
+protected Container(
         float height,
         float depth,
         float tareWeight,
@@ -36,11 +37,13 @@ public abstract class Container
 
     public virtual void Empty()
     {
+        if (IsOnShip) throw new ArgumentException("You cant empty a container that is on a ship");
         CargoWeight = 0;
     }
 
     public virtual void Load(float mass)
     {
+        if (IsOnShip) throw new ArgumentException("You cant load a container that is on a ship");
         if (mass <= 0) throw new ArgumentException("Mass cant be 0 or less");
         if (!CanLoadCargo(mass))
         {
@@ -54,5 +57,15 @@ public abstract class Container
     public override string ToString()
     {
         return $"{GetSerialNumber()}, {CargoWeight}/{MaxPayload}kg";
+    }
+
+    public void OnShip()
+    {
+        IsOnShip = true;
+    }
+
+    public void FromShip()
+    {
+        IsOnShip = false;
     }
 }

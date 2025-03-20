@@ -13,6 +13,7 @@ public class LiquidContainer : HazardousContainer{
 
     public void Load(float mass, LiquidCargo cargo)
     {
+        if (IsOnShip) throw new ArgumentException("You cant load a container that is on a ship");
         if (mass <= 0) throw new ArgumentException("Mass cant be 0 or less");
         if (!CanLoadCargo(mass, cargo))
         {
@@ -25,8 +26,14 @@ public class LiquidContainer : HazardousContainer{
         }
     }
 
+    public override void Load(float mass)
+    {
+        Load(mass, Cargo);
+    }
+
     protected bool CanLoadCargo(float mass, LiquidCargo cargo)
     {
+        if (Cargo != cargo) throw new ArgumentException("Wrong cargo.");
         if (cargo == LiquidCargo.Fuel)
         {
             if (mass + CargoWeight <= 0.5 * MaxPayload) return true;

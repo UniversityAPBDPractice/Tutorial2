@@ -1,4 +1,4 @@
-﻿namespace Tutorial2;
+﻿namespace Tutorial2.Exceptions;
 
 public class OverfillException : Exception
 {

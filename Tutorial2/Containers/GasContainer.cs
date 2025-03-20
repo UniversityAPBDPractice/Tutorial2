@@ -22,6 +22,7 @@ public class GasContainer : HazardousContainer
 
     public override void Load(float mass)
     {
+        if (IsOnShip) throw new ArgumentException("You cant load a container that is on a ship");
         float weightBefore = CargoWeight;
         try
         {
@@ -33,7 +34,10 @@ public class GasContainer : HazardousContainer
         }
         finally
         {
-            Pressure *= CargoWeight / weightBefore;   
+            if (weightBefore == 0)
+            {
+                Pressure = CargoWeight / MaxPayload / 5; // Just a random ratio for pressure
+            }else Pressure *= CargoWeight / weightBefore;   
         }
     }
     public override string ToString()
