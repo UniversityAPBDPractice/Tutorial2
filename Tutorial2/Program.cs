@@ -6,11 +6,56 @@ using Interfaces;
 using Ships;
 public class Program
 {
+    private static List<Ship> Ships = new List<Ship>();
+    private static List<Container> Containers = new List<Container>();
     public static void Main()
     {
-        RunDemo();
-    }
+        // RunDemo();
+        int userInput = 0;
+        string shipString;
+        string containerString;
 
+        float maxSpeed;
+        float shipMaxPayload;
+        int maxContainers;
+
+        int i;
+        while (userInput != -1)
+        {
+            shipString = "\nList of container ships:";
+            Ships.ForEach(ship => shipString += $"\n{ship}");
+            Console.WriteLine(shipString);
+
+            containerString = "\nList of containers:";
+            Containers.ForEach(container=> containerString += $"\n{container}");
+            Console.Write(containerString);
+            Console.Write("\n\n\n");
+            
+            Console.WriteLine("-1. Exit");
+            Console.WriteLine("1. Add a container ship");
+            if (Ships.Count > 0)
+            {
+                Console.WriteLine("2. Remove a container ship");
+            }
+            userInput = Int32.Parse(Console.ReadLine());
+            if (userInput == 1)
+            {
+                Console.WriteLine("Enter Max Speed: ");
+                maxSpeed = float.Parse(Console.ReadLine());
+                Console.WriteLine("Enter Max Payload of the ship: ");
+                shipMaxPayload = float.Parse(Console.ReadLine());
+                Console.WriteLine("Enter Max Containers: ");
+                maxContainers = Int32.Parse(Console.ReadLine());
+                Ship ship = new Ship(maxSpeed, maxContainers, shipMaxPayload);
+                Ships.Add(ship);
+            }else if (userInput == 2 && Ships.Count > 0)
+            {
+                Console.WriteLine("Enter Index of a Ship to be removed");
+                i = int.Parse(Console.ReadLine());
+                Ships.RemoveAt(i);
+            }
+        }
+    }
     public static void RunDemo()
     {
         // CREATING CONTAINERS
